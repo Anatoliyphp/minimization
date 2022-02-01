@@ -20,14 +20,13 @@ namespace Minimization
             List<string> states = _inputStream.ReadLine().Substring(2).Split(" ").ToList();
             foreach (string s in states)
             {
-                int state = Convert.ToInt32(s);
                 if (!_equalClassesStates.ContainsKey(Convert.ToInt32(outputStateSignals[i])))
                 {
-                    _equalClassesStates.Add(Convert.ToInt32(outputStateSignals[i]), new List<int>());
+                    _equalClassesStates.Add(Convert.ToInt32(outputStateSignals[i]), new List<string>());
                 }
 
-                _equalClassesStates[Convert.ToInt32(outputStateSignals[i])].Add(state);
-                _equalClasses[state] = Convert.ToInt32(outputStateSignals[i]);
+                _equalClassesStates[Convert.ToInt32(outputStateSignals[i])].Add(s);
+                _equalClasses[s] = Convert.ToInt32(outputStateSignals[i]);
                 statesOrders.Add(s);
                 ++i;
             }
@@ -36,29 +35,29 @@ namespace Minimization
             while ((inputLine = _inputStream.ReadLine()) != null)
             {
                 List<string> inputLineList = inputLine.Split(" ").ToList();
-                int inputSignal = Convert.ToInt32(inputLineList.First());
+                string inputSignal = inputLineList.First();
                 i = 1;
                 foreach (string state in statesOrders)
                 {
-                    int newState = Convert.ToInt32(inputLineList[i]);
-                    if (!_transitionSourceStates.ContainsKey(Convert.ToInt32(state)))
+                    string newState = inputLineList[i];
+                    if (!_transitionSourceStates.ContainsKey(state))
                     {
-                        _transitionSourceStates.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _transitionSourceStates.Add(state, new Dictionary<string, string>());
                     }
 
-                    _transitionSourceStates[Convert.ToInt32(state)].Add(inputSignal, newState);
-                    if (!_transitionStates.ContainsKey(Convert.ToInt32(state)))
+                    _transitionSourceStates[state].Add(inputSignal, newState);
+                    if (!_transitionStates.ContainsKey(state))
                     {
-                        _transitionStates.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _transitionStates.Add(state, new Dictionary<string, string>());
                     }
 
-                    _transitionStates[Convert.ToInt32(state)].Add(inputSignal, newState);
-                    if (!_inputAndOutputStatesSignals.ContainsKey(Convert.ToInt32(state)))
+                    _transitionStates[state].Add(inputSignal, newState);
+                    if (!_inputAndOutputStatesSignals.ContainsKey(state))
                     {
-                        _inputAndOutputStatesSignals.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _inputAndOutputStatesSignals.Add(state, new Dictionary<string, int>());
                     }
 
-                    _inputAndOutputStatesSignals[Convert.ToInt32(state)]
+                    _inputAndOutputStatesSignals[state]
                         .Add(inputSignal, Convert.ToInt32(outputStateSignals[i - 1]));
                     ++i;
                 }
@@ -68,10 +67,10 @@ namespace Minimization
         public void PrintMoore()
         {
             _outputStream.Write("  ");
-            foreach (List<int> states in _equalClassesStates.Values)
+            foreach (List<string> states in _equalClassesStates.Values)
             {
-                int state = states.First();
-                _outputStream.Write($"{_inputAndOutputStatesSignals[state][1]} ");
+                string state = states.First();
+                _outputStream.Write($"{state} ");
             }
             _outputStream.WriteLine();
             _outputStream.Write("  ");
@@ -80,19 +79,26 @@ namespace Minimization
                 _outputStream.Write($"{key} ");
             }
             _outputStream.WriteLine();
-            int i = 1;
-            while (i <= _transitionSourceStates[1].Count)
+            List<string> inputSignals = new List<string>();
+            foreach (var inputSignal in _transitionSourceStates.First().Value)
             {
-                _outputStream.Write($"{i} ");
-                foreach (List<int> states in _equalClassesStates.Values)
+                if (!inputSignals.Contains(inputSignal.Key))
                 {
-                    int state = states.First();
-                    int outputSignal = _transitionSourceStates[state][i];
-                    int ouputSignalToEqualClass =
-                        _equalClassesStates.FirstOrDefault(e => e.Value.Contains(outputSignal)).Key;
-                    _outputStream.Write($"{ouputSignalToEqualClass} ");
+                    inputSignals.Add(inputSignal.Key);
                 }
-                i++;
+            }
+
+            foreach (string inputSignal in inputSignals)
+            {
+                _outputStream.Write($"{inputSignal} ");
+                foreach (List<string> states in _equalClassesStates.Values)
+                {
+                    string state = states.First();
+                    string outputSignal = _transitionSourceStates[state][inputSignal];
+                    //int ouputSignalToEqualClass =
+                    //    _equalClassesStates.FirstOrDefault(e => e.Value.Contains(outputSignal)).Key;
+                    _outputStream.Write($"{outputSignal} ");
+                }
                 _outputStream.WriteLine();
             }
             _outputStream.Close();

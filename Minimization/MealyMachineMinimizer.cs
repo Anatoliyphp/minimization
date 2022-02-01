@@ -21,43 +21,43 @@ namespace Minimization
             while ((inputLine = _inputStream.ReadLine()) != null)
             {
                 List<string> inputLineList = inputLine.Split(" ").ToList();
-                int inputSignal = Convert.ToInt32(inputLineList.First());
+                string inputSignal = inputLineList.First();
                 int i = 1;
                 foreach (string state in states)
                 {
                     int slashPosition = inputLineList[i].IndexOf('/');
-                    int transitionState = Convert.ToInt32(inputLineList[i].Substring(0, slashPosition));
+                    string transitionState = inputLineList[i].Substring(0, slashPosition);
                     int outputSignal = Convert.ToInt32(inputLineList[i].Substring(slashPosition + 1, inputLineList[i].Length - slashPosition - 1));
-                    if (!_transitionSourceStates.ContainsKey(Convert.ToInt32(state)))
+                    if (!_transitionSourceStates.ContainsKey(state))
                     {
-                        _transitionSourceStates.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _transitionSourceStates.Add(state, new Dictionary<string, string>());
                     }
-                    _transitionSourceStates[Convert.ToInt32(state)][inputSignal] = transitionState;
-                    if (!_transitionStates.ContainsKey(Convert.ToInt32(state)))
+                    _transitionSourceStates[state][inputSignal] = transitionState;
+                    if (!_transitionStates.ContainsKey(state))
                     {
-                        _transitionStates.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _transitionStates.Add(state, new Dictionary<string, string>());
                     }
-                    _transitionStates[Convert.ToInt32(state)][inputSignal] = transitionState;
-                    if (!_inputAndOutputStatesSignals.ContainsKey(Convert.ToInt32(state)))
+                    _transitionStates[state][inputSignal] = transitionState;
+                    if (!_inputAndOutputStatesSignals.ContainsKey(state))
                     {
-                        _inputAndOutputStatesSignals.Add(Convert.ToInt32(state), new Dictionary<int, int>());
+                        _inputAndOutputStatesSignals.Add(state, new Dictionary<string, int>());
                     }
-                    _inputAndOutputStatesSignals[Convert.ToInt32(state)][inputSignal] = outputSignal;
+                    _inputAndOutputStatesSignals[state][inputSignal] = outputSignal;
                     i++;
                 }
             }
-            Dictionary<int, List<int>> newEqualClassStates = new Dictionary<int, List<int>>();
-            foreach (KeyValuePair<int, Dictionary<int,int>> signals in _inputAndOutputStatesSignals)
+            Dictionary<int, List<string>> newEqualClassStates = new Dictionary<int, List<string>>();
+            foreach (KeyValuePair<string, Dictionary<string,int>> signals in _inputAndOutputStatesSignals)
             {
                 if (!newEqualClassStates.ContainsKey(DictionaryHash(signals.Value)))
                 {
-                    newEqualClassStates.Add(DictionaryHash(signals.Value), new List<int>());
+                    newEqualClassStates.Add(DictionaryHash(signals.Value), new List<string>());
                 }
                 newEqualClassStates[DictionaryHash(signals.Value)].Add(signals.Key);
             }
-            foreach (KeyValuePair<int, List<int>> equalClassToStates in newEqualClassStates)
+            foreach (KeyValuePair<int, List<string>> equalClassToStates in newEqualClassStates)
             {
-                foreach (int state in equalClassToStates.Value)
+                foreach (string state in equalClassToStates.Value)
                 {
                     _equalClasses[state] = _equalClassesStates.Count+ 1;
                 }
@@ -73,20 +73,28 @@ namespace Minimization
                 _outputStream.Write($"{key}   ");
             }
             _outputStream.WriteLine();
-            int i = 1;
-            while (i <= _transitionSourceStates[1].Count)
+            
+            List<string> inputSignals = new List<string>();
+            foreach (var inputSignal in _transitionSourceStates.First().Value)
             {
-                _outputStream.Write($"{i} ");
-                foreach (List<int> states in _equalClassesStates.Values)
+                if (!inputSignals.Contains(inputSignal.Value))
                 {
-                    int state = states.First();
-                    int outputstate = _transitionSourceStates[state][i];
-                    int outputSugnal = _inputAndOutputStatesSignals[outputstate][i];
+                    inputSignals.Add(inputSignal.Value);
+                }
+            }
+            
+            foreach (string inputSignal in inputSignals)
+            {
+                _outputStream.Write($"{inputSignal} ");
+                foreach (List<string> states in _equalClassesStates.Values)
+                {
+                    string state = states.First();
+                    string outputstate = _transitionSourceStates[state][inputSignal];
+                    int outputSugnal = _inputAndOutputStatesSignals[outputstate][inputSignal];
                     int ouputstateToEqualClass =
                         _equalClassesStates.FirstOrDefault(e => e.Value.Contains(outputstate)).Key;
                     _outputStream.Write($"{ouputstateToEqualClass}/{outputSugnal} ");
                 }
-                i++;
                 _outputStream.WriteLine();
             }
             _outputStream.Close();

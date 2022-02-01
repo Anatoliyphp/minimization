@@ -5,7 +5,6 @@ C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\bin\D
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\bin\Debug\net5.0\Minimization.dll
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\bin\Debug\net5.0\ref\Minimization.dll
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\bin\Debug\net5.0\Minimization.pdb
-C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.csproj.AssemblyReference.cache
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.AssemblyInfoInputs.cache
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.AssemblyInfo.cs
@@ -14,3 +13,4 @@ C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\D
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\ref\Minimization.dll
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.pdb
 C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.genruntimeconfig.cache
+C:\Users\Анатолий\RiderProjects\MInimizeMealyAndMoore\Minimization\obj\Debug\net5.0\Minimization.csproj.AssemblyReference.cache
